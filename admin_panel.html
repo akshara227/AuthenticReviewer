@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard - Authentic Reviewer</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+        }
+
+        /* FIXED SIDEBAR */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 220px;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: white;
+            padding-top: 20px;
+        }
+
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 12px 20px;
+        }
+
+        .sidebar a:hover {
+            background: rgba(255,255,255,0.2);
+            border-radius: 8px;
+        }
+
+        .main-content {
+            margin-left: 230px;
+            padding: 20px;
+        }
+
+        .stat-card {
+            border-radius: 15px;
+            transition: 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-6px);
+        }
+
+        .logout-btn {
+            border-radius: 20px;
+        }
+
+        /* Dark Mode */
+        .dark-mode {
+            background: #1e1e1e;
+            color: white;
+        }
+
+        .dark-mode .card {
+            background: #2c2c2c;
+            color: white;
+        }
+
+        .dark-mode .table {
+            color: white;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar">
+    <h4 class="text-center">Admin Panel</h4>
+    <hr>
+    <a href="#">📊 Dashboard</a>
+    <a href="#">📝 Reviews</a>
+
+    <button onclick="toggleDarkMode()" 
+        id="darkToggle"
+        class="btn btn-dark w-75 ms-3 mt-3">
+        🌙 Dark Mode
+    </button>
+
+    <a href="/logout" class="btn btn-light text-dark w-75 ms-3 mt-3 logout-btn">
+        Logout
+    </a>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+
+    <h3 class="mb-4">📊 Dashboard Overview</h3>
+
+    <!-- Analytics Cards -->
+    <div class="row mb-4">
+
+        <div class="col-md-4">
+            <div class="card shadow p-3 text-center stat-card">
+                <h5>Total Reviews</h5>
+                <h3>{{ total_reviews }}</h3>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow p-3 text-center stat-card">
+                <h5>Fake Reviews</h5>
+                <h3 class="text-danger">{{ fake_reviews }}</h3>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow p-3 text-center stat-card">
+                <h5>Fake Review %</h5>
+                <h3 class="text-warning">{{ fake_percentage }}%</h3>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Average Rating Chart -->
+    <div class="card shadow p-3 mb-4" style="width: 60%; height: 300px;">
+    <h6>⭐ Average Rating Per User</h6>
+    <canvas id="ratingChart"></canvas>
+</div>
+
+    <!-- Reviews Table -->
+    <div class="card shadow p-4">
+        <h4>📝 All User Reviews</h4>
+
+        <div class="table-responsive">
+            <table class="table table-bordered text-center">
+                <thead class="table-primary">
+                    <tr>
+                        <th>User</th>
+                        <th>Review</th>
+                        <th>Rating</th>
+                        <th>Result</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for review in reviews %}
+                    <tr>
+                        <td>{{ review[0] }}</td>
+                        <td>{{ review[1] }}</td>
+                        <td>{{ review[2] }} ⭐</td>
+                        <td>
+                            {% if review[3] == "Fake ❌" %}
+                                <span class="text-danger fw-bold">{{ review[3] }}</span>
+                            {% else %}
+                                <span class="text-success fw-bold">{{ review[3] }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="/delete/{{ loop.index0 }}" class="btn btn-danger btn-sm">
+                                Delete
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+
+</div>
+<script>
+window.onload = function() {}
+
+    if (localStorage.getItem("theme") === "dark") {
+        document.body.classList.add("dark-mode");
+        document.getElementById("darkToggle").innerHTML = "☀ Light Mode";
+    }
+
+    const data = { avg_ratings };
+
+    if (data.length > 0) {
+
+        const usernames = data.map(item => item[0]);
+        const ratings = data.map(item => parseFloat(item[1]));
+
+        new Chart(document.getElementById('ratingChart'), {
+            type: 'bar',
+            data: {
+                labels: usernames,
+                datasets: [{
+                    label: 'Average Rating',
+                    data: ratings,
+                    backgroundColor: '#6a11cb'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 5
+                    }
+                }
+            }
+        });
+
+    } else {
+        document.getElementById("ratingChart").outerHTML =
+            "<p class='text-danger'>No rating data available</p>";
+    };
+</script>
+
+
+</body>
+</html>

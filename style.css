@@ -1,0 +1,85 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f1f3f6;
+}
+
+/* Navbar */
+.navbar {
+    background-color: #2874f0;
+}
+
+.navbar-brand {
+    color: white !important;
+    font-weight: bold;
+    font-size: 22px;
+}
+
+.nav-link {
+    color: white !important;
+    margin-left: 15px;
+}
+
+/* Card */
+.card {
+    border-radius: 15px;
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: scale(1.02);
+}
+
+/* Buttons */
+.btn-custom {
+    background-color: #fb641b;
+    color: white;
+    border-radius: 8px;
+}
+
+.btn-custom:hover {
+    background-color: #e55b17;
+}
+
+/* Animation */
+.fade-in {
+    animation: fadeIn 1s ease-in;
+}
+
+@keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+button {
+    transition: 0.3s;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+select {
+    border-radius: 10px;
+}
+
+.star {
+    color: gold;
+    font-size: 18px;
+}
+* Smooth Transition */
+body {
+    transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* Dark Mode Theme */
+.dark-mode {
+    background-color: #121212 !important;
+    color: #ffffff !important;
+}
+
+.dark-mode .card {
+    background-color: #1e1e1e !important;
+    color: white !important;
+}
+
+.dark-mode .navbar {
+    background-color: #000 !important;
+}

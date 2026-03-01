@@ -1,0 +1,173 @@
+ <!DOCTYPE html>
+<html>
+<head>
+    <title>Register - Authentic Reviewer</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .glass-card {
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 40px;
+            width: 400px;
+            color: white;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {opacity:0; transform:translateY(20px);}
+            to {opacity:1; transform:translateY(0);}
+        }
+
+        .logo {
+            font-size: 40px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .form-control {
+            border-radius: 10px;
+        }
+
+        .btn-custom {
+            border-radius: 25px;
+            padding: 10px;
+            transition: 0.3s;
+        }
+
+        .btn-custom:hover {
+            transform: scale(1.05);
+        }
+
+        .back-btn {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .toggle-password {
+            cursor: pointer;
+            position: absolute;
+            right: 15px;
+            top: 38px;
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="glass-card">
+
+    <div class="logo">🔍</div>
+    <div class="title">Create Account</div>
+
+    <form method="POST" action="/register">
+
+        <div class="mb-3">
+            <label>Username</label>
+            <input type="text" name="username" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label>Email</label>
+            <input type="email" name="email" class="form-control" required>
+        </div>
+
+        <div class="mb-3 password-wrapper">
+            <label>Password</label>
+            <input type="password" name="password" id="password" class="form-control" required>
+            <div class="progress mt-2" style="height:8px;">
+    <div id="strengthBar" class="progress-bar"></div>
+</div>
+<small id="strengthText"></small>
+            <span class="toggle-password" onclick="togglePassword()">👁</span>
+        </div>
+
+        <button type="submit" class="btn btn-warning w-100" onclick="showLoader()">
+    <span id="btnText">Register</span>
+    <span id="loader" class="spinner-border spinner-border-sm d-none"></span>
+</button>
+
+    </form>
+
+    <div class="back-btn">
+        <a href="/" class="btn btn-light btn-sm mt-3">⬅ Back to Home</a>
+    </div>
+
+</div>
+
+<script>
+function togglePassword() {
+    var pass = document.getElementById("password");
+    if (pass.type === "password") {
+        pass.type = "text";
+    } else {
+        pass.type = "password";
+    }
+}
+</script>
+<script>
+document.getElementById("password").addEventListener("input", function() {
+    let pass = this.value;
+    let strength = 0;
+
+    if(pass.length > 5) strength += 25;
+    if(pass.match(/[A-Z]/)) strength += 25;
+    if(pass.match(/[0-9]/)) strength += 25;
+    if(pass.match(/[^A-Za-z0-9]/)) strength += 25;
+
+    let bar = document.getElementById("strengthBar");
+    let text = document.getElementById("strengthText");
+
+    bar.style.width = strength + "%";
+
+    if(strength <= 25){
+        bar.className = "progress-bar bg-danger";
+        text.innerHTML = "Weak Password";
+    }
+    else if(strength <= 50){
+        bar.className = "progress-bar bg-warning";
+        text.innerHTML = "Medium Password";
+    }
+    else if(strength <= 75){
+        bar.className = "progress-bar bg-info";
+        text.innerHTML = "Strong Password";
+    }
+    else{
+        bar.className = "progress-bar bg-success";
+        text.innerHTML = "Very Strong Password";
+    }
+});
+</script>
+<script>
+function showLoader(){
+    document.getElementById("btnText").innerHTML = "Processing...";
+    document.getElementById("loader").classList.remove("d-none");
+}
+</script>
+</body>
+</html>
